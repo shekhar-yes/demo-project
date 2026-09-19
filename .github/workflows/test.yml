@@ -1,0 +1,19 @@
+name: Terraform GCP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: [self-hosted, Linux, X64]
+
+    steps:
+      - name: Test Runner
+        run: |
+          echo "Runner is working"
+          echo "Hostname:"
+          hostname
+          echo "User:"
+          whoami
+          echo "OS:"
+          uname -a
