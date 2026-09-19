@@ -10,7 +10,9 @@ on:
 jobs:
   terraform:
 
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, Linux, X64,uat]
+    # UAT deployment
+ 
 
     steps:
 
