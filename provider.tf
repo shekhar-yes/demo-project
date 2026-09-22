@@ -10,6 +10,6 @@ terraform {
 }
 
 provider "google" {
-  project = "	devops-502817"
+  project = "devops-502817"
   region  = "asia-south1"
 }
