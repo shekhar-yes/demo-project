@@ -1,0 +1,96 @@
+name: Terraform GCP
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+jobs:
+
+  terraform-plan:
+
+    runs-on: [self-hosted]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Terraform
+        run: terraform version
+
+      - name: Check GCP
+        run: gcloud version
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+
+  terraform-apply:
+
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply')
+
+    needs: terraform-plan
+
+    runs-on: [self-hosted]
+
+    environment:
+      name: terraform-apply
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+
+  terraform-destroy:
+
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.action == 'destroy'
+
+    needs: terraform-plan
+
+    runs-on: [self-hosted]
+
+    environment:
+      name: terraform-destroy
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
