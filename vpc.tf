@@ -6,7 +6,7 @@ auto_create_subnetworks = false
 }
 
 ## subnet range 10.0.1.0/25  
-us-central1 (Iowa)
+
 
 resource "google_compute_subnetwork"  "subnet2" {
 
